@@ -1,14 +1,13 @@
-
-// utilities.go --- 
-// 
+// utilities.go ---
+//
 // Filename: utilities.go
 // Author: Mourad Sabour
 // Created: Mar mai  6 15:32:06 2014 (-0700)
-// Last-Updated: 
+// Last-Updated:
 //           By: Mourad Sabour
-// 
+//
 
-package main
+package gocss
 
 import "os"
 
@@ -25,13 +24,3 @@ func xOpen(path string) (fi *os.File) {
 	}
 	return
 }
-
-
-
-
-
-
-
-
-
-

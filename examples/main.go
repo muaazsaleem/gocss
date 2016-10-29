@@ -1,13 +1,13 @@
-// main.go --- 
-// 
+// main.go ---
+//
 // Filename: main.go
 // Author: Mourad Sabour
 // Created: Jeu mai  1 01:06:11 2014 (-0700)
-// Last-Updated: 
+// Last-Updated:
 //           By: Mourad Sabour
-// 
+//
 
-package main
+package gocss
 
 import "os"
 import "fmt"
@@ -17,27 +17,12 @@ func usage() {
 }
 
 func main() {
-	if (len(os.Args) <= 1) {
-		usage(); return
+	if len(os.Args) <= 1 {
+		usage()
+		return
 	}
 	// Example of use
-	css := parserCSS(os.Args[1])
+	css := ParserCSS(os.Args[1])
 	// Show css selectors & properties
 	showCSS(css)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

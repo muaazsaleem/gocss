@@ -1,10 +1,10 @@
-package main
+package gocss
 
 import "bytes"
 import "fmt"
 import "bufio"
 
-const ( 
+const (
 	Class = 1
 	Id
 	All // the '*' selector
@@ -14,32 +14,32 @@ const (
 
 // e.g: "color: white;" Name => 'color', Value => 'white'
 type property struct {
-	Name string
+	Name  string
 	Value string
 }
 
 // e.g ".container { color: white }" Name => '.container'
 // Properties => { Name : 'color', Value : 'white' }, Type => Class
 type selector struct {
-	Name string
+	Name       string
 	Properties []property
-	Type int
+	Type       int
 }
 
 // Parse and clean the css selector
-func parseSelector(slc []byte) (string) {
+func parseSelector(slc []byte) string {
 	return string(bytes.TrimSpace(slc[:len(slc)-1]))
 }
 
 // Parse and clean the css properties
-func parseProperties(rd *bufio.Reader) ([]property) {
+func parseProperties(rd *bufio.Reader) []property {
 	properties := make([]property, 0)
 	ppt, _ := rd.ReadBytes('}')
-	ppt = bytes.TrimSpace(ppt[:len(ppt) - 1])	
+	ppt = bytes.TrimSpace(ppt[:len(ppt)-1])
 	for _, p := range bytes.Split(ppt, []byte{';'}) {
 		p = bytes.TrimSpace(p)
 		index := bytes.Index(p, []byte{':'})
-		if (index != -1) {
+		if index != -1 {
 			prtName := string(p[:index])
 			prtValue := string(p[index:])
 			properties = append(properties, property{prtName, prtValue})
@@ -55,18 +55,13 @@ func showCSS(selectors []selector) {
 		fmt.Println(selectors[s].Name)
 		fmt.Println("---------- properties ----------")
 		for p := range selectors[s].Properties {
-			fmt.Println(selectors[s].Properties[p].Name + 
+			fmt.Println(selectors[s].Properties[p].Name +
 				selectors[s].Properties[p].Value)
 		}
 	}
 }
 
-func parserCSS(css string) ([]selector){
-	// Open the css file
-	fd := xOpen(css)
-	defer xCloseOpen(fd)
-	// Load the css file
-	rd := bufio.NewReader(fd)
+func ParserCSSFromReader(rd *bufio.Reader) []selector {
 	// Parse the file
 	selectors := make([]selector, 0)
 	for slt, e := rd.ReadBytes('{'); e == nil; slt, e = rd.ReadBytes('{') {
@@ -76,4 +71,13 @@ func parserCSS(css string) ([]selector){
 			selector{selectorName, properties, Class})
 	}
 	return selectors
+}
+
+func ParserCSS(css string) []selector {
+	// Open the css file
+	fd := xOpen(css)
+	defer xCloseOpen(fd)
+	// Load the css file
+	rd := bufio.NewReader(fd)
+	return ParserCSSFromReader(rd)
 }
